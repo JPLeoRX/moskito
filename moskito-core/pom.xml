@@ -54,5 +54,12 @@
           <artifactId>hamcrest-all</artifactId>
           <scope>test</scope>
       </dependency>
+
+      <!-- Solr native java client -->
+      <dependency>
+          <groupId>org.apache.solr</groupId>
+          <artifactId>solr-solrj</artifactId>
+          <version>7.3.0</version>
+      </dependency>
   </dependencies>
 </project>
