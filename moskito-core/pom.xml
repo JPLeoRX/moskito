@@ -61,12 +61,5 @@
           <artifactId>solr-solrj</artifactId>
           <version>7.3.0</version>
       </dependency>
-
-      <!-- Apache Commons -->
-      <dependency>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>
-          <version>3.7</version>
-      </dependency>
   </dependencies>
 </project>
