@@ -23,7 +23,13 @@ public class CaughtError {
 	 * Tags associated with this request (if any).
 	 */
 	private Map<String, String> tags;
-	
+
+	public CaughtError(long timestamp, Throwable throwable, Map<String, String> tags) {
+		this.timestamp = timestamp;
+		this.throwable = throwable;
+		this.tags = tags;
+	}
+
 	public CaughtError(Throwable aThrowable){
 		throwable = aThrowable;
 		timestamp = System.currentTimeMillis();
