@@ -3,10 +3,10 @@ package net.anotheria.moskito.core.errorhandling;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * A converter that will handle transition between {@link CaughtError} and {@link SolrCaughtError}
@@ -39,7 +39,7 @@ public class SolrCaughtErrorConverter {
         solr.setThrowableClassName(caughtError.getThrowable().getClass().getName());
         solr.setThrowableMessage(caughtError.getThrowable().getMessage());
         solr.setThrowableJson(gson.toJson(caughtError.getThrowable()));
-        solr.setTags(caughtError.getTags());
+        solr.setTagsJson(gson.toJson(caughtError.getTags()));
 
         // Return resulting object
         return solr;
@@ -50,11 +50,12 @@ public class SolrCaughtErrorConverter {
      * @param solrCaughtError solr error
      * @return caught error
      */
+    @SuppressWarnings("unchecked")
     public CaughtError fromSolr(SolrCaughtError solrCaughtError) {
         // Restore all the fields
         long timestamp = solrCaughtError.getTimestamp();
         Throwable throwable = gson.fromJson(solrCaughtError.getThrowableJson(), Throwable.class);
-        Map<String, String> tags = solrCaughtError.getTags();
+        Map<String, String> tags = (Map<String, String>) gson.fromJson(solrCaughtError.getTagsJson(), Map.class);
 
         // Return new object with those fields
         return new CaughtError(timestamp, throwable, tags);
@@ -67,7 +68,10 @@ public class SolrCaughtErrorConverter {
      */
     public List<SolrCaughtError> toSolr(Collection<CaughtError> caughtErrors) {
         // Convert via parallel stream mapping
-        return caughtErrors.parallelStream().map(this::toSolr).collect(Collectors.toList());
+        //return caughtErrors.parallelStream().map(this::toSolr).collect(Collectors.toList());
+
+        // This piece will probably never be needed
+        throw new IllegalAccessError("This method shouldn't be called");
     }
 
     /**
@@ -77,6 +81,12 @@ public class SolrCaughtErrorConverter {
      */
     public List<CaughtError> fromSolr(Collection<SolrCaughtError> solrCaughtErrors) {
         // Convert via parallel stream mapping
-        return solrCaughtErrors.parallelStream().map(this::fromSolr).collect(Collectors.toList());
+        //return solrCaughtErrors.parallelStream().map(this::fromSolr).collect(Collectors.toList());
+
+        // We're having troubles with running streams from moskito, it looks like moskito still uses java 1.7, so we have to do this sad list iteration
+        List<CaughtError> caughtErrors = new ArrayList<>(solrCaughtErrors.size());
+        for (SolrCaughtError solrCaughtError : solrCaughtErrors)
+            caughtErrors.add(this.fromSolr(solrCaughtError));
+        return caughtErrors;
     }
 }
