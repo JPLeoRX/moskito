@@ -30,15 +30,11 @@ public class SolrErrorCatcher extends BuiltinErrorCatcher implements ErrorCatche
     }
 
     /**
-     * Since we build this on top of {@link BuiltinErrorCatcher} it will call the super method
-     * Then we will store the caught error in solr
+     * We will store the caught error in solr
      * @param throwable throwable
      */
     @Override
     public void add(Throwable throwable) {
-        // Don't forget to add it using the builtin error catcher
-        super.add(throwable);
-
         // Convert from throwable to caught error
         CaughtError caughtError = new CaughtError(throwable);
 
