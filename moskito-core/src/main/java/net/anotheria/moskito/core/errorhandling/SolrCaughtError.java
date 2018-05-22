@@ -155,7 +155,7 @@ public class SolrCaughtError implements Serializable {
      * @param tags solr list
      */
     @Field
-    public void setTagsAsJson(ArrayList<String> tags) {
+    public void setTagsJson(ArrayList<String> tags) {
         this.tagsJson = tags.get(0);
     }
 
