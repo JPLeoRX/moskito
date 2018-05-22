@@ -1,6 +1,5 @@
 package net.anotheria.moskito.core.errorhandling;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.beans.Field;
 
 import java.io.Serializable;
@@ -23,25 +22,16 @@ public class SolrCaughtError implements Serializable {
     private String throwableMessage;
 
     @Field
-    private String throwableStackTrace;
-
-    @Field
-    private String throwableFullStackTrace;
+    private String throwableJson;
 
     @Field("key*")
     private Map<String, String> tags;
 
     /**
-     * This object must be constructed only from an existing error
-     * @param caughtError error
+     * Default constructor
      */
-    public SolrCaughtError(CaughtError caughtError) {
-        this.timestamp = caughtError.getTimestamp();
-        this.throwableClassName = caughtError.getThrowable().getClass().getName();
-        this.throwableMessage = caughtError.getThrowable().getMessage();
-        this.throwableStackTrace = ExceptionUtils.getStackTrace(caughtError.getThrowable());
-        this.throwableFullStackTrace = ExceptionUtils.getFullStackTrace(caughtError.getThrowable());
-        this.tags = caughtError.getTags();
+    public SolrCaughtError() {
+
     }
 
     /**
@@ -53,11 +43,27 @@ public class SolrCaughtError implements Serializable {
     }
 
     /**
+     * Setter
+     * @param timestamp new timestamp
+     */
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    /**
      * Getter
      * @return the name of the throwable class
      */
     public String getThrowableClassName() {
         return throwableClassName;
+    }
+
+    /**
+     * Setter
+     * @param throwableClassName new name of the throwable class
+     */
+    public void setThrowableClassName(String throwableClassName) {
+        this.throwableClassName = throwableClassName;
     }
 
     /**
@@ -69,19 +75,27 @@ public class SolrCaughtError implements Serializable {
     }
 
     /**
-     * Getter
-     * @return stack trace of the throwable
+     * Setter
+     * @param throwableMessage new message from the throwable
      */
-    public String getThrowableStackTrace() {
-        return throwableStackTrace;
+    public void setThrowableMessage(String throwableMessage) {
+        this.throwableMessage = throwableMessage;
     }
 
     /**
      * Getter
-     * @return nested stack trace from the throwable
+     * @return json string of the throwable
      */
-    public String getThrowableFullStackTrace() {
-        return throwableFullStackTrace;
+    public String getThrowableJson() {
+        return throwableJson;
+    }
+
+    /**
+     * Setter
+     * @param throwableJson new json string of the throwable
+     */
+    public void setThrowableJson(String throwableJson) {
+        this.throwableJson = throwableJson;
     }
 
     /**
@@ -92,14 +106,25 @@ public class SolrCaughtError implements Serializable {
         return tags;
     }
 
+    /**
+     * Setter
+     * @param tags new tags
+     */
+    public void setTags(Map<String, String> tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * To string
+     * @return string representation of this object
+     */
     @Override
     public String toString() {
         return "SolrCaughtError{" +
                 "timestamp=" + timestamp +
                 ", throwableClassName='" + throwableClassName + '\'' +
                 ", throwableMessage='" + throwableMessage + '\'' +
-                ", throwableStackTrace='" + throwableStackTrace + '\'' +
-                ", throwableFullStackTrace='" + throwableFullStackTrace + '\'' +
+                ", throwableJson='" + throwableJson + '\'' +
                 ", tags=" + tags +
                 '}';
     }
