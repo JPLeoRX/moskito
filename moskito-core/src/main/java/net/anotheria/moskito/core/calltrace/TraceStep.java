@@ -193,6 +193,15 @@ public class TraceStep implements Serializable{
 	 * @return
 	 */
 	public long getDuration() {
+		// If this is a root - calculate it's duration based on all children
+		if (parent == null) {
+			long rootDuration = 0;
+			for (TraceStep s : children)
+				rootDuration += s.getDuration();
+			return rootDuration;
+		}
+
+		// If it's not a root - just return duration
 		return duration;
 	}
 
@@ -201,7 +210,7 @@ public class TraceStep implements Serializable{
 	 * @return
 	 */
 	public long getNetDuration(){
-		long ret = duration;
+		long ret = this.getDuration();
 		for (TraceStep s : children )
 			ret -= s.getDuration();
 		return ret;
